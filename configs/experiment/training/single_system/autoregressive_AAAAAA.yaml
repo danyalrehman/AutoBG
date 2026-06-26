@@ -1,0 +1,9 @@
+# @package _global_
+
+defaults:
+  - /experiment/training/single_system/autoregressive_base
+  - override /data: single_system/AAAAAA
+
+model:
+  num_bins: 8192
+  temperature: 0.98 # optimal inference-time sampling temperature

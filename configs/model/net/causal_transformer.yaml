@@ -1,0 +1,64 @@
+_target_: src.models.neural_networks.autoregressive.causal_transformer.CausalTransformer
+
+# Discretization
+num_bins: ${model.num_bins}
+input_dim: 3  # 3D coordinates (x, y, z)
+
+# Architecture
+channels: 256
+num_layers: 8
+num_heads: 8
+head_dim: 32  # channels / num_heads
+expansion: 4  # feed-forward expansion factor
+max_num_atoms: ${data.num_atoms}
+
+# Regularization
+dropout: 0.0
+
+# Position embeddings
+pos_embed_type: "sinusoidal"  # or "learned"
+
+# Normalization
+use_rms_norm: true
+
+# Activation
+use_swiglu: true  # Use SwiGLU activation instead of GELU
+
+# Token embedding type
+coordinate_embedding_type: "embedding"  # or "linear" for one-hot input
+
+# Attention optimization
+use_flash_attention: true  # Use Flash Attention for memory efficiency (requires PyTorch 2.0+)
+
+# Precision
+use_bf16: false  # Use bfloat16 precision for forward pass
+
+# Cross-attention for conditioning
+# When true: sequence conditioning is attended to via cross-attention (unmasked - full visibility)
+# When false: sequence conditioning is added to embeddings (causally masked with coordinates)
+use_cross_attention: false
+
+# Cross-attention stability options (only used when use_cross_attention=true)
+cross_attn_qk_norm: false      # QK-norm: normalizes queries and keys before attention
+cross_attn_zero_init: false    # Zero-init: initializes cross-attention output projection to zero
+cross_attn_gate: false         # Tanh gate: learnable gate that starts at 0 for gradual contribution
+
+# Whether to add conditioning embeddings to input (in addition to or instead of cross-attention)
+add_cond_to_input: false
+
+# Global conditioning: each position attends to all conditioning tokens before transformer
+# Simpler alternative to cross-attention - applied once upfront
+use_global_cond: false
+
+# Input normalization: normalize combined embeddings before transformer blocks
+use_input_norm: false
+
+# Optional: conditional embedder for transferable setting
+# Embeds atom type, amino acid type, position, and sequence length
+cond_embed:
+  _target_: src.models.neural_networks.autoregressive.causal_transformer.ConditionalEmbedder
+  hidden_dim: ${model.net.channels}
+  output_dim: ${model.net.channels}
+  num_atom_emb: 64   # 54 atom types + padding
+  num_residue_emb: 32  # 20 amino acids + padding
+  use_atom_pos_embed: false  # Whether to include atom position (index) embedding

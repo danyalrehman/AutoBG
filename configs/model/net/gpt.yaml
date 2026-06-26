@@ -1,0 +1,43 @@
+_target_: src.models.neural_networks.autoregressive.gpt.GPT
+
+# Discretization
+num_bins: ${model.num_bins}
+input_dim: 3  # 3D coordinates (x, y, z)
+
+# Architecture (GPT-2 style naming: n_embd, n_layer, n_head)
+channels: 192  # n_embd
+num_layers: 6  # n_layer
+num_heads: 6  # n_head
+head_dim: 64  # channels / num_heads
+expansion: 4  # feed-forward expansion factor
+max_num_atoms: ${data.num_atoms}
+
+# Regularization
+dropout: 0.0
+
+# Position embeddings (GPT-2 uses learned by default)
+pos_embed_type: "learned"  # or "sinusoidal"
+
+# Normalization
+use_rms_norm: true
+
+# Activation
+use_swiglu: true  # Use SwiGLU activation instead of GELU
+
+# Token embedding type
+coordinate_embedding_type: "embedding"  # or "linear" for one-hot input
+
+# Attention optimization
+use_flash_attention: true  # Use Flash Attention for memory efficiency (requires PyTorch 2.0+)
+
+# Precision
+use_bf16: false  # Use bfloat16 precision for forward pass
+
+# Optional: conditional embedder for transferable setting
+# Embeds atom type, amino acid type, position, and sequence length
+cond_embed:
+  _target_: src.models.neural_networks.autoregressive.gpt.ConditionalEmbedder
+  hidden_dim: ${model.net.channels}
+  output_dim: ${model.net.channels}
+  num_atom_emb: 64   # 54 atom types + padding
+  num_residue_emb: 32  # 20 amino acids + padding

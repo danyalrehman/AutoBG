@@ -1,0 +1,12 @@
+_target_: src.optimizers.Muon
+_partial_: true
+lr: 0.02
+momentum: 0.95
+betas:
+  - 0.9
+  - 0.999
+eps: 1e-8
+weight_decay: 0.0
+nesterov: true
+ns_steps: 5
+adamw_lr_ratio: 0.1

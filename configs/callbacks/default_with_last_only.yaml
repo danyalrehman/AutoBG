@@ -1,0 +1,14 @@
+defaults:
+  - model_summary
+  - lr_monitor
+  - _self_
+  - model_checkpoint_resampled_energy_w2
+  - model_checkpoint_time
+  - model_checkpoint_loss
+  - model_checkpoint_last_only
+
+model_summary:
+  max_depth: 2
+
+model_checkpoint_time:
+  save_last: False

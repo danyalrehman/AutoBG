@@ -1,0 +1,29 @@
+# @package _global_
+
+# Base config for autoregressive single system experiments.
+# Dataset-specific configs should inherit from this and override /data.
+
+defaults:
+  - override /model: autoregressive
+  - override /model/net: causal_transformer
+  - override /trainer: gpu
+
+model:
+  net:
+    cond_embed: null  # Single system doesn't need conditional embeddings
+
+  sampling_config:
+    num_proposal_samples: 10_000
+    num_test_proposal_samples: 200_000
+    clip_reweighting_logits: 0.002
+
+data:
+  batch_size: 512
+  com_augmentation: True
+  num_eval_samples: 10_000
+  eval_on_test: False
+
+trainer:
+  check_val_every_n_epoch: 200 # checkpointing / evaluation cadence (epochs)
+  max_epochs: 1000
+  num_sanity_val_steps: 0

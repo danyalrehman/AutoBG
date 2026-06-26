@@ -1,0 +1,56 @@
+# Medium Causal Transformer (~45M params)
+# Balanced size for most molecular systems
+
+_target_: src.models.neural_networks.autoregressive.causal_transformer.CausalTransformer
+
+# Discretization
+num_bins: ${model.num_bins}
+input_dim: 3  # 3D coordinates (x, y, z)
+
+# Architecture (follows GPT-2/LLaMA conventions: head_dim=64)
+channels: 512
+num_layers: 12
+num_heads: 8  # channels / head_dim
+head_dim: 64
+expansion: 4  # feed-forward expansion factor
+max_num_atoms: ${data.num_atoms}
+
+# Regularization
+dropout: 0.0
+
+# Position embeddings
+pos_embed_type: "sinusoidal"  # or "learned"
+
+# Normalization
+use_rms_norm: true
+
+# Activation
+use_swiglu: true  # Use SwiGLU activation instead of GELU
+
+# Token embedding type
+coordinate_embedding_type: "embedding"  # or "linear" for one-hot input
+
+# Attention optimization
+use_flash_attention: true  # Use Flash Attention for memory efficiency (requires PyTorch 2.0+)
+
+# Precision
+use_bf16: false  # Use bfloat16 precision for forward pass
+
+# Whether to add conditioning embeddings to input (in addition to or instead of cross-attention)
+add_cond_to_input: false
+
+# Global conditioning: each position attends to all conditioning tokens before transformer
+use_global_cond: false
+
+# Input normalization: normalize combined embeddings before transformer blocks
+use_input_norm: false
+
+# Optional: conditional embedder for transferable setting
+# Embeds atom type, amino acid type, position, and sequence length
+cond_embed:
+  _target_: src.models.neural_networks.autoregressive.causal_transformer.ConditionalEmbedder
+  hidden_dim: ${model.net.channels}
+  output_dim: ${model.net.channels}
+  num_atom_emb: 64   # 54 atom types + padding
+  num_residue_emb: 32  # 20 amino acids + padding
+  use_atom_pos_embed: false  # Whether to include atom position (index) embedding

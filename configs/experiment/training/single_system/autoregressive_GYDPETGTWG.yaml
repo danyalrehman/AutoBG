@@ -1,0 +1,10 @@
+# @package _global_
+
+defaults:
+  - /experiment/training/single_system/autoregressive_base
+  - override /model/net: causal_transformer_medium
+  - override /data: single_system/GYDPETGTWG
+
+model:
+  num_bins: 8192
+  temperature: 0.88 # optimal inference-time sampling temperature

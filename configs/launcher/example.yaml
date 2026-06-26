@@ -1,0 +1,29 @@
+# @package _global_
+#
+# Example SLURM launcher config. Copy this file, rename it for your cluster,
+# and adjust the values below to match your cluster's partitions and resources.
+#
+# Usage:  python src/train.py launcher=example ...
+#
+defaults:
+  - override /hydra/launcher: submitit_slurm
+
+hydra:
+  launcher:
+    # SLURM partition name
+    partition: your_partition
+    # CPUs per task (increase for data-heavy pipelines)
+    cpus_per_task: 4
+    # RAM in GB
+    mem_gb: 32
+    # GPU resource string -- adjust type/count for your cluster
+    gres: gpu:1
+    # Maximum wall-clock time in minutes (1440 = 24 h)
+    timeout_min: 1440
+    # Maximum number of job-array tasks to run concurrently
+    array_parallelism: 100
+    # Optional per-job shell setup commands (module loads, env activation, etc.)
+    # setup:
+    #   - "module purge"
+    #   - "module load cuda/12.4"
+    #   - "source ~/.venv/bin/activate"

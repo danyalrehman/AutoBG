@@ -1,0 +1,38 @@
+# @package _global_
+
+defaults:
+  - override /model: autoregressive
+  - override /model/net: causal_transformer
+  - override /data: single_system/Ace-A-Nme
+  - override /trainer: gpu
+
+model:
+  num_bins: 1024
+  discretize_min: -3.0
+  discretize_max: 3.0
+  temperature: 1.0
+
+  net:
+    channels: 256
+    num_layers: 8
+    num_heads: 8
+    head_dim: 32
+    expansion: 4
+    dropout: 0.0
+    pos_embed_type: "sinusoidal"
+    use_rms_norm: true
+    use_swiglu: false
+    cond_embed: null
+
+  sampling_config:
+    batch_size: 2500
+    num_test_proposal_samples: 200_000
+    clip_reweighting_logits: 0.002
+
+data:
+  batch_size: 1024
+  num_eval_samples: 10_000
+
+trainer:
+  limit_test_batches: 1
+  limit_val_batches: 1

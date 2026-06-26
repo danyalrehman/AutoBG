@@ -1,0 +1,19 @@
+# @package _global_
+
+defaults:
+  - /experiment/training/single_system/autoregressive_base
+  - override /data: single_system/Ace-AAA-Nme
+  - override /model/optimizer: muon
+
+model:
+  num_bins: 4096
+  temperature: 1.02 # optimal inference-time sampling temperature
+  optimizer:
+    weight_decay: 0.01
+
+callbacks:
+  model_checkpoint_time:
+    every_n_epochs: 25
+
+data:
+  batch_size: 1024
