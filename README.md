@@ -61,8 +61,8 @@ This project uses [uv](https://docs.astral.sh/uv/) for environment and dependenc
 
 ```bash
 # clone project
-git clone https://github.com/danyalrehman/Autoregressive_Boltzmann_Generators.git
-cd Autoregressive_Boltzmann_Generators
+git clone https://github.com/danyalrehman/AutoBG.git
+cd AutoBG
 
 # create the environment and install dependencies
 uv sync
